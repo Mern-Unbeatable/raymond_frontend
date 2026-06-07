@@ -76,7 +76,7 @@ const HeroSection = memo(() => {
   });
   const [openKey, setOpenKey] = useState(null);
   const [dropDirection, setDropDirection] = useState("down");
-  const panelRef = useRef(null);
+  const panelRef = useRef(null); 
 
   const filtersConfig = useMemo(
     () => [
