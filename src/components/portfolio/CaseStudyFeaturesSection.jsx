@@ -51,7 +51,7 @@ ResultCard.displayName = "ResultCard";
 
 const CaseStudyFeaturesSection = memo(({ portfolio }) => {
   const highlights = portfolio?.featuredHighlight
-    ? portfolio.featuredHighlight.split(/\n|\./).map(h => h.trim()).filter(Boolean)
+    ? portfolio.featuredHighlight.split(/\n|\.|,/).map(h => h.trim()).filter(Boolean)
     : HIGHLIGHTS;
 
   if (portfolio?.featuredHighlight && highlights.length === 0) {

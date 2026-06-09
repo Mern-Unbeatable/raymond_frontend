@@ -82,9 +82,11 @@ const CaseStudyProjectSection = memo(({ portfolio }) => {
         aria-label='Project details'
       >
         <div className='max-w-384 mx-auto px-4 sm:px-8 lg:px-12'>
-          <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8 lg:gap-6'>
+          <div className='flex flex-wrap justify-center gap-8 sm:gap-12 lg:gap-16'>
             {details.map((detail) => (
-              <DetailItem key={detail.label} {...detail} />
+              <div key={detail.label} className='flex-1 min-w-[130px] max-w-[180px] flex justify-center'>
+                <DetailItem {...detail} />
+              </div>
             ))}
           </div>
         </div>
