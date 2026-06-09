@@ -30,7 +30,7 @@ DetailItem.displayName = 'DetailItem';
 
 const CaseStudyProjectSection = memo(({ portfolio }) => {
   const overview = portfolio?.projectOverview
-    ? [portfolio.projectOverview]
+    ? portfolio.projectOverview.split('\n').filter(p => p.trim() !== '')
     : OVERVIEW_PARAGRAPHS;
 
   const details = [
