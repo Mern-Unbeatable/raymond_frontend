@@ -43,12 +43,12 @@ const INITIAL_FORM = {
 // FeatureItem
 // ---------------------------------------------------------------------------
 const FeatureItem = memo(({ icon, value, label }) => (
-  <div className="min-w-0 bg-[rgba(0,31,61,0.05)] border border-[rgba(0,31,61,0.05)] rounded-xl flex flex-col items-center justify-center gap-1.5 py-4 px-3">
+  <div className="min-w-0 h-full bg-[rgba(0,31,61,0.05)] border border-[rgba(0,31,61,0.05)] rounded-xl flex flex-col items-center justify-center gap-1.5 py-4 px-3">
     {icon}
-    <span className="font-inter font-bold text-blue-950 text-xs sm:text-lg leading-6 text-center wrap-break-word">
+    <span className="font-inter font-bold text-blue-950 text-sm sm:text-base md:text-lg leading-5 md:leading-6 text-center wrap-break-word w-full">
       {value}
     </span>
-    <span className="font-inter font-medium text-xs uppercase tracking-wide text-[rgba(0,31,61,0.6)]">
+    <span className="font-inter font-medium text-xs uppercase tracking-wide text-[rgba(0,31,61,0.6)] text-center wrap-break-word w-full">
       {label}
     </span>
   </div>
@@ -290,7 +290,7 @@ const PropertyInfoSection = memo(({ property, isOffer = false }) => {
         ? property.description
         : [property.description]
       : PROPERTY.description,
-    video: property?.video ?? null,
+    video: (typeof property?.video === 'string' && property.video.trim() !== '' && property.video !== 'null' && property.video !== 'undefined') ? property.video : null,
   };
 
   return (
@@ -345,7 +345,7 @@ const PropertyInfoSection = memo(({ property, isOffer = false }) => {
 
               {/* Features bar */}
               <div className="border-y border-[rgba(0,31,61,0.1)] py-5">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 auto-rows-fr">
                   <FeatureItem
                     icon={
                       <Home
@@ -407,52 +407,25 @@ const PropertyInfoSection = memo(({ property, isOffer = false }) => {
               </div>
 
               {/* Video tour */}
-              {(prop.video || ASSETS.videoThumbnail) && (
-                <div className="flex flex-col gap-4">
-                  <h2 className="font-inter font-semibold text-slate-900 text-xl lg:text-2xl">
-                    Video Tour
-                  </h2>
-                  <div className="relative bg-slate-200 rounded-xl overflow-hidden aspect-video">
-                    {prop.video ? (
-                      <video
-                        src={prop.video}
-                        controls
-                        className="absolute inset-0 size-full object-cover"
-                        poster={ASSETS.videoThumbnail}
-                      />
-                    ) : (
-                      <>
-                        <img
-                          src={ASSETS.videoThumbnail}
-                          alt="Property video tour thumbnail"
-                          className="absolute inset-0 size-full object-cover"
-                          loading="lazy"
-                        />
-                        <div
-                          className="absolute inset-0 bg-black/20"
-                          aria-hidden="true"
-                        />
-                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-                          <button
-                            type="button"
-                            aria-label="Play virtual tour video"
-                            className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center hover:bg-white/30 transition-colors duration-150 cursor-pointer focus-visible:outline-2 focus-visible:outline-white"
-                          >
-                            <Play
-                              size={24}
-                              className="text-white fill-white ml-1"
-                              aria-hidden="true"
-                            />
-                          </button>
-                          <span className="font-inter font-medium text-white text-base drop-shadow-sm">
-                            Video not available
-                          </span>
-                        </div>
-                      </>
-                    )}
-                  </div>
+              <div className="flex flex-col gap-4">
+                <h2 className="font-inter font-semibold text-slate-900 text-xl lg:text-2xl">
+                  Video Tour
+                </h2>
+                <div className="relative bg-slate-200 rounded-xl overflow-hidden aspect-video border border-slate-200">
+                  {prop.video ? (
+                    <video
+                      src={prop.video}
+                      controls
+                      className="absolute inset-0 size-full object-cover"
+                      poster={ASSETS.videoThumbnail}
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center bg-slate-50 text-slate-500 font-inter text-base sm:text-lg">
+                      No video available
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
 
             {/* Right column -- sticky agent form */}

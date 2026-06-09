@@ -1,4 +1,5 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // Static assets
@@ -68,15 +69,36 @@ PhotoGalleryRow.displayName = "PhotoGalleryRow";
 const PhotoGallerySection = memo(({ images, showBadge = false }) => {
   const safeImages = Array.isArray(images) ? images : [];
   const mainImage = safeImages[0]?.url ?? null;
-  // only real uploaded images for the right grid (indices 1-4)
-  const gridImages = safeImages.slice(1, 5);
+  // all other uploaded images for the right grid
+  const gridImages = safeImages.slice(1);
+
+  const [selectedIndex, setSelectedIndex] = useState(null);
+
+  const handleNext = (e) => {
+    e.stopPropagation();
+    setSelectedIndex((prev) => (prev + 1) % safeImages.length);
+  };
+
+  const handlePrev = (e) => {
+    e.stopPropagation();
+    setSelectedIndex(
+      (prev) => (prev - 1 + safeImages.length) % safeImages.length,
+    );
+  };
+
+  const handleClose = () => {
+    setSelectedIndex(null);
+  };
 
   return (
     <section className="py-8 lg:py-10 bg-white">
       <div className="max-w-384 mx-auto px-4 sm:px-8 lg:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:h-[400px] lg:h-[500px]">
           {/* Main image */}
-          <div className="relative bg-slate-200 rounded-xl overflow-hidden h-64 sm:h-80 md:h-full md:min-h-80 lg:min-h-90 xl:min-h-115">
+          <div
+            className="relative bg-slate-200 rounded-xl overflow-hidden h-64 sm:h-80 md:h-full cursor-pointer"
+            onClick={() => mainImage && setSelectedIndex(0)}
+          >
             {mainImage ? (
               <img
                 src={mainImage}
@@ -100,15 +122,12 @@ const PhotoGallerySection = memo(({ images, showBadge = false }) => {
 
           {/* Right grid — only rendered when there are extra uploaded images */}
           {gridImages.length > 0 && (
-            <div
-              className={`grid grid-cols-2 gap-3 h-64 sm:h-80 md:h-full md:min-h-80 lg:min-h-90 xl:min-h-115 ${
-                gridImages.length >= 3 ? "grid-rows-2" : "grid-rows-1"
-              }`}
-            >
+            <div className="grid grid-cols-2 gap-3 h-64 sm:h-80 md:h-full overflow-y-auto pr-1">
               {gridImages.map((img, i) => (
                 <div
                   key={img.id ?? i}
-                  className="relative bg-slate-200 rounded-xl overflow-hidden h-full"
+                  className="relative bg-slate-200 rounded-xl overflow-hidden min-h-[120px] sm:min-h-[160px] md:min-h-[180px] cursor-pointer hover:opacity-95 transition-opacity"
+                  onClick={() => setSelectedIndex(i + 1)}
                 >
                   <img
                     src={img.url}
@@ -122,6 +141,53 @@ const PhotoGallerySection = memo(({ images, showBadge = false }) => {
           )}
         </div>
       </div>
+
+      {/* Lightbox Modal */}
+      {selectedIndex !== null && safeImages.length > 0 && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm"
+          onClick={handleClose}
+        >
+          <button
+            className="absolute top-4 right-4 p-2 text-white/70 hover:text-white bg-black/50 hover:bg-black/80 rounded-full transition-all"
+            onClick={handleClose}
+          >
+            <X size={24} />
+          </button>
+
+          {safeImages.length > 1 && (
+            <button
+              className="absolute left-4 p-3 text-white/70 hover:text-white bg-black/50 hover:bg-black/80 rounded-full transition-all z-10"
+              onClick={handlePrev}
+            >
+              <ChevronLeft size={32} />
+            </button>
+          )}
+
+          <div
+            className="relative max-w-5xl w-full max-h-[85vh] px-16 flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={safeImages[selectedIndex]?.url}
+              alt="Property fullscreen view"
+              className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
+            />
+            <div className="absolute -bottom-10 left-0 right-0 text-center text-white/70 font-inter text-sm">
+              {selectedIndex + 1} / {safeImages.length}
+            </div>
+          </div>
+
+          {safeImages.length > 1 && (
+            <button
+              className="absolute right-4 p-3 text-white/70 hover:text-white bg-black/50 hover:bg-black/80 rounded-full transition-all z-10"
+              onClick={handleNext}
+            >
+              <ChevronRight size={32} />
+            </button>
+          )}
+        </div>
+      )}
     </section>
   );
 });

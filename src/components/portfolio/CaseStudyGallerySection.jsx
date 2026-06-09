@@ -17,31 +17,37 @@ const GALLERY_IMAGES = [
   "https://images.unsplash.com/photo-1507149833265-60c372daea22?auto=format&fit=crop&w=800&q=80",
 ];
 
-const CaseStudyGallerySection = memo(() => (
-  <section className="py-14 lg:py-20 bg-white">
-    <div className="max-w-384 mx-auto px-4 sm:px-8 lg:px-12">
-      <h2 className="font-playfair text-slate-900 text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight mb-6 lg:mb-10">
-        Project Gallery
-      </h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-1 rounded-2xl overflow-hidden">
-        {GALLERY_IMAGES.map((src, i) => (
-          <div
-            key={i}
-            className="overflow-hidden"
-            style={{ aspectRatio: "1 / 1" }}
-          >
-            <img
-              src={src}
-              alt={`Project gallery image ${i + 1}`}
-              className="size-full object-cover hover:scale-105 transition-transform duration-500"
-              loading="lazy"
-            />
-          </div>
-        ))}
+const CaseStudyGallerySection = memo(({ portfolio }) => {
+  const images = portfolio?.gallery?.length > 0
+    ? portfolio.gallery.map(g => g.url)
+    : GALLERY_IMAGES;
+
+  return (
+    <section className="py-14 lg:py-20 bg-white">
+      <div className="max-w-384 mx-auto px-4 sm:px-8 lg:px-12">
+        <h2 className="font-playfair text-slate-900 text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight mb-6 lg:mb-10">
+          Project Gallery
+        </h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-1 rounded-2xl overflow-hidden">
+          {images.map((src, i) => (
+            <div
+              key={i}
+              className="overflow-hidden"
+              style={{ aspectRatio: "1 / 1" }}
+            >
+              <img
+                src={src}
+                alt={`Project gallery image ${i + 1}`}
+                className="size-full object-cover hover:scale-105 transition-transform duration-500"
+                loading="lazy"
+              />
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
-));
+    </section>
+  );
+});
 
 CaseStudyGallerySection.displayName = "CaseStudyGallerySection";
 

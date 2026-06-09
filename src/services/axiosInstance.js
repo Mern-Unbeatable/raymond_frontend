@@ -19,7 +19,7 @@ const shouldSkipRefresh = (url = '') =>
 
 const axiosInstance = axios.create({
   baseURL: API_CONFIG.BASE_URL,
-  timeout: API_CONFIG.TIMEOUT,
+  timeout: 60000, // Increased from 10s to 60s to prevent timeouts during large image uploads
   headers: {
     'Content-Type': 'application/json',
   },

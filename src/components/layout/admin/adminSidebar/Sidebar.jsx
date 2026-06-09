@@ -67,7 +67,7 @@ const NAV_ITEMS = [
     path: ROUTES.ADMIN_INVESTMENT,
     icon: TrendingUp,
   },
-  // { name: 'Portfolio', path: ROUTES.ADMIN_PORTFOLIO, icon: FolderOpen },
+  { name: 'Portfolio', path: ROUTES.ADMIN_PORTFOLIO, icon: FolderOpen },
   {
     name: 'Consultation',
     path: ROUTES.ADMIN_CONSULTATION,

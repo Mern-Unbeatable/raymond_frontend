@@ -1,8 +1,10 @@
 import React, { memo, useState, useCallback, useEffect, useRef } from 'react';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Loader2 } from 'lucide-react';
 import gsap from 'gsap';
 import AnimatedButton from '../shared/AnimatedButton';
 import { ROUTES } from '../../config';
+import httpMethods from '../../services/httpMethods';
+import { API_ENDPOINTS } from '../../services/httpEndpoint';
 
 const ASSETS = {
   beforeImg: '/Portfolio/beforeImg.webp',
@@ -392,13 +394,61 @@ CaseStudyCard.displayName = 'CaseStudyCard';
 // ---------------------------------------------------------------------------
 // CaseStudiesSection
 // ---------------------------------------------------------------------------
-const CaseStudiesSection = memo(() => (
-  <>
-    {CASE_STUDIES.map((cs) => (
-      <CaseStudyCard key={cs.id} {...cs} />
-    ))}
-  </>
-));
+const CaseStudiesSection = memo(() => {
+  const [portfolios, setPortfolios] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPortfolios = async () => {
+      try {
+        const { data, error } = await httpMethods.get(API_ENDPOINTS.PORTFOLIOS.LIST);
+        if (!error && data?.success && data?.data?.portfolios) {
+          const apiPortfolios = data.data.portfolios.map((item, index) => ({
+            id: item.id,
+            primaryTag: item.propertyType || 'Portfolio',
+            secondaryTag: item.location || 'Location',
+            categoryTag: item.area || 'Area',
+            title: item.title,
+            description: item.description,
+            images: item.gallery?.length > 0
+              ? item.gallery.map((g, i) => ({ src: g.url, label: `Image ${i + 1}` }))
+              : [{ src: ASSETS.featuredImg, label: 'Default Image' }],
+            bgColor: index % 2 === 0 ? 'bg-blue-tint' : 'bg-violet-tint',
+            reverse: index % 2 !== 0,
+          }));
+          setPortfolios(apiPortfolios);
+        } else {
+          setPortfolios(CASE_STUDIES);
+        }
+      } catch (err) {
+        console.error("Failed to fetch portfolios:", err);
+        setPortfolios(CASE_STUDIES);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPortfolios();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center py-20 min-h-[50vh]">
+        <Loader2 className="w-10 h-10 animate-spin text-orange-500" />
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {portfolios.length > 0 ? (
+        portfolios.map((cs) => <CaseStudyCard key={cs.id} {...cs} />)
+      ) : (
+        <div className="text-center py-20 text-gray-500">No portfolios available.</div>
+      )}
+    </>
+  );
+});
 CaseStudiesSection.displayName = 'CaseStudiesSection';
 
 export default CaseStudiesSection;

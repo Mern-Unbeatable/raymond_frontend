@@ -23,14 +23,10 @@ const INITIAL = {
 
 const PROPERTY_TYPE_OPTIONS = [
   { value: '', label: 'Select type' },
-  { value: 'DETACHED', label: 'Detached' },
-  { value: 'SEMI_DETACHED', label: 'Semi Detached' },
-  { value: 'TERRACE', label: 'Terrace' },
-  { value: 'FLAT', label: 'Flat' },
-  { value: 'BUNGALOW', label: 'Bungalow' },
-  { value: 'OFFICE_SPACE', label: 'Office Space' },
+  { value: 'SINGLE_FAMILY_HOME', label: 'Single Family Home' },
+  { value: 'TOWNHOMES', label: 'Townhomes' },
   { value: 'LAND', label: 'Land' },
-  { value: 'WAREHOUSE', label: 'Warehouse' },
+  { value: 'COMMERCIAL', label: 'Commercial' },
 ];
 
 const mapPortfolioResponseToItem = (portfolio) => ({

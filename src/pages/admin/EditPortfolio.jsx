@@ -16,6 +16,14 @@ const GALLERY_IMAGES = [
   'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=300&q=60',
 ];
 
+const PROPERTY_TYPE_OPTIONS = [
+  { value: '', label: 'Select type' },
+  { value: 'SINGLE_FAMILY_HOME', label: 'Single Family Home' },
+  { value: 'TOWNHOMES', label: 'Townhomes' },
+  { value: 'LAND', label: 'Land' },
+  { value: 'COMMERCIAL', label: 'Commercial' },
+];
+
 const INITIAL = {
   title: '',
   shortDescription: '',
@@ -256,7 +264,17 @@ const EditPortfolio = () => {
           <Input value={form.location} onChange={onChange('location')} />
         </Field>
         <Field label='Type'>
-          <Input value={form.type} onChange={onChange('type')} />
+          <select
+            value={form.type}
+            onChange={onChange('type')}
+            className='border border-gray-200 rounded-md px-3.5 py-2.5 text-base text-gray-700 bg-white focus:outline-hidden focus:border-orange-400 transition-colors cursor-pointer w-full'
+          >
+            {PROPERTY_TYPE_OPTIONS.map((option) => (
+              <option key={option.value || 'placeholder'} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </Field>
         <Field label='Area'>
           <Input value={form.area} onChange={onChange('area')} />

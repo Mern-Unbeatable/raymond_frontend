@@ -13,15 +13,6 @@ const OVERVIEW_PARAGRAPHS = [
   'Our team focused on maximizing natural light, creating open spaces, and integrating modern materials to deliver a high-end lifestyle experience.',
 ];
 
-const DETAILS = [
-  { icon: MapPin, label: 'Location', value: 'Lagos, NG' },
-  { icon: Home, label: 'Type', value: 'Penthouse' },
-  { icon: Maximize2, label: 'Area', value: '3,200 sqft' },
-  { icon: CalendarDays, label: 'Duration', value: '6 Months' },
-  { icon: DollarSign, label: 'Budget', value: '$850,000' },
-  { icon: TrendingUp, label: 'ROI', value: '35%' },
-];
-
 const DetailItem = memo(({ icon: Icon, label, value }) => (
   <div className='flex flex-col items-center gap-2 text-white min-w-0'>
     <Icon size={24} aria-hidden='true' className='text-white/80 shrink-0' />
@@ -37,50 +28,70 @@ const DetailItem = memo(({ icon: Icon, label, value }) => (
 ));
 DetailItem.displayName = 'DetailItem';
 
-const CaseStudyProjectSection = memo(() => (
-  <>
-    <section className='bg-white py-10 lg:py-14'>
-      <div className='max-w-384 mx-auto px-4 sm:px-8 lg:px-12'>
-        <div className='flex flex-col lg:flex-row gap-8 lg:gap-16 items-start'>
-          <div className='flex flex-col gap-2 shrink-0 lg:w-64 xl:w-72'>
-            <p className='font-inter font-medium text-orange-warm text-sm lg:text-base'>
-              The Vision
-            </p>
-            <div className='flex flex-col gap-2'>
-              <h2 className='font-playfair font-bold text-slate-900 text-2xl lg:text-3xl leading-tight'>
-                Project Overview
-              </h2>
-              <div className='h-0.5 w-20 bg-orange-500' aria-hidden='true' />
+const CaseStudyProjectSection = memo(({ portfolio }) => {
+  const overview = portfolio?.projectOverview
+    ? [portfolio.projectOverview]
+    : OVERVIEW_PARAGRAPHS;
+
+  const details = [
+    { icon: MapPin, label: 'Location', value: portfolio?.location || 'Lagos, NG' },
+    { icon: Home, label: 'Type', value: portfolio?.propertyType || 'Penthouse' },
+    { icon: Maximize2, label: 'Area', value: portfolio?.area || '3,200 sqft' },
+    { icon: CalendarDays, label: 'Duration', value: portfolio?.duration || '6 Months' },
+    { icon: DollarSign, label: 'Budget', value: portfolio?.budget || '$850,000' },
+  ];
+  
+  if (portfolio?.roi) {
+    details.push({ icon: TrendingUp, label: 'ROI', value: portfolio.roi });
+  } else if (!portfolio) {
+    details.push({ icon: TrendingUp, label: 'ROI', value: '35%' });
+  }
+
+  return (
+    <>
+      <section className='bg-white py-10 lg:py-14'>
+        <div className='max-w-384 mx-auto px-4 sm:px-8 lg:px-12'>
+          <div className='flex flex-col lg:flex-row gap-8 lg:gap-16 items-start'>
+            <div className='flex flex-col gap-2 shrink-0 lg:w-64 xl:w-72'>
+              <p className='font-inter font-medium text-orange-warm text-sm lg:text-base'>
+                The Vision
+              </p>
+              <div className='flex flex-col gap-2'>
+                <h2 className='font-playfair font-bold text-slate-900 text-2xl lg:text-3xl leading-tight'>
+                  Project Overview
+                </h2>
+                <div className='h-0.5 w-20 bg-orange-500' aria-hidden='true' />
+              </div>
+            </div>
+            <div className='flex flex-col gap-4 flex-1 min-w-0'>
+              {overview.map((para, i) => (
+                <p
+                  key={i}
+                  className='font-inter text-slate-700 text-sm lg:text-base leading-relaxed'
+                >
+                  {para}
+                </p>
+              ))}
             </div>
           </div>
-          <div className='flex flex-col gap-4 flex-1 min-w-0'>
-            {OVERVIEW_PARAGRAPHS.map((para, i) => (
-              <p
-                key={i}
-                className='font-inter text-slate-700 text-sm lg:text-base leading-relaxed'
-              >
-                {para}
-              </p>
+        </div>
+      </section>
+
+      <section
+        className='bg-panel-navy py-8 lg:py-10'
+        aria-label='Project details'
+      >
+        <div className='max-w-384 mx-auto px-4 sm:px-8 lg:px-12'>
+          <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8 lg:gap-6'>
+            {details.map((detail) => (
+              <DetailItem key={detail.label} {...detail} />
             ))}
           </div>
         </div>
-      </div>
-    </section>
-
-    <section
-      className='bg-panel-navy py-8 lg:py-10'
-      aria-label='Project details'
-    >
-      <div className='max-w-384 mx-auto px-4 sm:px-8 lg:px-12'>
-        <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8 lg:gap-6'>
-          {DETAILS.map((detail) => (
-            <DetailItem key={detail.label} {...detail} />
-          ))}
-        </div>
-      </div>
-    </section>
-  </>
-));
+      </section>
+    </>
+  );
+});
 
 CaseStudyProjectSection.displayName = 'CaseStudyProjectSection';
 
